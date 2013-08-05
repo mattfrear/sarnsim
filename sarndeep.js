@@ -60,26 +60,36 @@ if (Meteor.isClient) {
   }
 
   var animate = function(timing) {
-    var sum = 0;
+    // timing should be an array of milliseconds
+    // initial state = mouth closed.
+    // In timing[0] milliseconds the mouth will open
+    // In timing[0] + timing[1] milliseconds the mouth will close, etc
+    // timing should contain an even number of elements so that the mouth closes at the end
+
+    var when = 0;
     for (var i = 0; i < timing.length; i++) {
-      var time = timing[i];
-      sum += time;
-      setTimeout(function() { displayFace('sarndeep-open.jpg'); }, sum);
-      // console.log('sarndeep-open in ' + sum);
+      when += timing[i];
+      openMouthLater(when);
+      // console.log('sarndeep-open in ' + when);
       i++;
 
       if (i >= timing.length) {
         break;
       } 
 
-      time = timing[i];
-      
-      sum += time;
-      setTimeout(function() { displayFace('sarndeep.jpg'); }, sum);
-      // console.log('sarndeep in ' + sum);
+      when += timing[i];
+      closeMouthLater(when);
+      // console.log('sarndeep in ' + when);
     }
   }
 
+  var openMouthLater = function(millisecondsInTheFuture) {
+    setTimeout(function() { displayFace('sarndeep-open.jpg'); }, millisecondsInTheFuture);
+  };
+
+  var closeMouthLater = function(millisecondsInTheFuture) {
+    setTimeout(function() { displayFace('sarndeep.jpg'); }, millisecondsInTheFuture);
+  }
   var displayFace = function (filename) {
       document.getElementById('sarn-image').src = filename;
   };
